@@ -5,11 +5,11 @@ services:
 
   # Nginx Service
   nginx:
-    image: nginx:1.21-alpine
+    image: nginx:1.23-alpine
     ports:
       - 80:80
     volumes:
-      - ./src/app:/var/www/app
+      - ./src/project:/var/www/app
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - app
@@ -17,19 +17,19 @@ services:
 
   # Nodejs Service
   node:
-    build: ./src/node
+    build: ./.docker/node
     working_dir: /var/www/app
     volumes:
-      - ./src/app:/var/www/app
+      - ./src/project:/var/www/app
     depends_on:
       - app
 
   # App Service
   app:
-    build: ./src
+    build: ./.docker/app
     working_dir: /var/www/app
     volumes:
-      - ./src/app:/var/www/app
+      - ./src/project:/var/www/app
     depends_on:
       mysql:
         condition: service_healthy
@@ -41,7 +41,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
-      MYSQL_DATABASE: demo
+      MYSQL_DATABASE: ghtest
       MYSQL_USER: dbadmin
       MYSQL_PASSWORD: boredtodeath
     ports:
