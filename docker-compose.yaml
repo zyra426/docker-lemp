@@ -5,12 +5,22 @@ services:
 
   # Nginx Service
   nginx:
-    image: nginx:1.23-alpine
+    image: nginx:1.21-alpine
     ports:
       - 80:80
     volumes:
       - ./src/app:/var/www/app
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+      - node
+
+  # Nodejs Service
+  node:
+    build: ./src/node
+    working_dir: /var/www/app
+    volumes:
+      - ./src/app:/var/www/app
     depends_on:
       - app
 
@@ -27,17 +37,20 @@ services:
   # MySQL Service
   mysql:
     image: mysql/mysql-server:8.0
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
       MYSQL_DATABASE: demo
+      MYSQL_USER: dbadmin
+      MYSQL_PASSWORD: boredtodeath
     ports:
       - 3306:3306
     volumes:
       - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
       - mysqldata:/var/lib/mysql
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      test: mysqladmin ping -h 127.0.0.1 -u dbadmin --password=$$MYSQL_PASSWORD
       interval: 5s
       retries: 10
 
