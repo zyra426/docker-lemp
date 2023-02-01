@@ -67,7 +67,7 @@ init () {
         && docker compose run --rm --entrypoint="//opt/files/init" app \
         && yarn install
     
-    if [ ! -f .docker/nginx/certs/demo.test.crt ]; then
+    if [ ! -f .docker/nginx/certs/project.local.crt ]; then
         cert_generate
     fi
 
