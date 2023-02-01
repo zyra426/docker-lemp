@@ -5,12 +5,14 @@ services:
 
   # Nginx Service
   nginx:
-    image: nginx:1.23-alpine
+    build: ./.docker/nginx
     ports:
       - 80:80
+      - 443:443
     volumes:
       - ./src/project:/var/www/app
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./.docker/nginx/certs:/etc/nginx/certs
     depends_on:
       - app
       - node
@@ -30,6 +32,7 @@ services:
     working_dir: /var/www/app
     volumes:
       - ./src/project:/var/www/app
+      - ./.docker/app/init:/opt/files/init
     depends_on:
       mysql:
         condition: service_healthy
