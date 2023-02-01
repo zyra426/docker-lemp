@@ -18,7 +18,7 @@ build () {
 # Generate a new certificate
 cert_generate () {
     rm -Rf .docker/nginx/certs/project.*
-    docker compose run --rm nginx sh -c "cd /etc/nginx/certs && touch openssl.cnf && cat /etc/ssl1.1/openssl.cnf > openssl.cnf && echo \"\" >> openssl.cnf && echo \"[ SAN ]\" >> openssl.cnf && echo \"subjectAltName=DNS.1:project.local,DNS.2:project.local\" >> openssl.cnf && openssl req -x509 -sha256 -nodes -newkey rsa:4096 -keyout project.local.key -out project.local.crt -days 3650 -subj \"/CN=project.local\" -config openssl.cnf -extensions SAN && rm openssl.cnf"
+    docker compose run --rm nginx sh -c "cd /etc/nginx/certs && touch openssl.cnf && cat /etc/ssl/openssl.cnf > openssl.cnf && echo \"\" >> openssl.cnf && echo \"[ SAN ]\" >> openssl.cnf && echo \"subjectAltName=DNS.1:project.local,DNS.2:project.local\" >> openssl.cnf && openssl req -x509 -sha256 -nodes -newkey rsa:4096 -keyout project.local.key -out project.local.crt -days 3650 -subj \"/CN=project.local\" -config openssl.cnf -extensions SAN && rm openssl.cnf"
 }
 
 # Install the certificate
@@ -26,7 +26,7 @@ cert_install () {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain .docker/nginx/certs/project.local.crt
     elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-        sudo ln -s "$(pwd)/.docker/nginx/certs/demo.test.crt" /usr/local/share/ca-certificates/project.local.crt
+        sudo ln -s "$(pwd)/.docker/nginx/certs/project.local.crt" /usr/local/share/ca-certificates/project.local.crt
         sudo update-ca-certificates
     else
         echo "Could not install the certificate on the host machine, please do it manually"
