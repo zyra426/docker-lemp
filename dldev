@@ -65,8 +65,13 @@ init () {
         && down -v \
         && build \
         && docker compose run --rm --entrypoint="//opt/files/init" app \
-        && yarn install \
-        && start
+        && yarn install
+    
+    if [ ! -f .docker/nginx/certs/demo.test.crt ]; then
+        cert_generate
+    fi
+
+    start && cert_install
 }
 
 # Display and tail the logs of all containers or the specified one's

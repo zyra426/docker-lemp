@@ -33,6 +33,7 @@ services:
     volumes:
       - ./src/project:/var/www/app
       - ./.docker/app/init:/opt/files/init
+      - ./.docker/nginx/certs:/usr/local/share/ca-certificates
     depends_on:
       mysql:
         condition: service_healthy
