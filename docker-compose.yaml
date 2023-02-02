@@ -9,6 +9,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     volumes:
       - ./src/project:/var/www/app
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d
@@ -20,6 +21,8 @@ services:
   # Nodejs Service
   node:
     build: ./.docker/node
+    ports:
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     working_dir: /var/www/app
     volumes:
       - ./src/project:/var/www/app
