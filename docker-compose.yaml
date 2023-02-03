@@ -2,7 +2,18 @@ version: '3.9'
 
 # Services
 services:
-
+  # Ngrok Service
+  ngrok:
+    image: wernight/ngrok:latest
+    ports:
+      - 4040:4040
+    environment:
+      NGROK_PROTOCOL: http
+      NGROK_PORT: nginx:443
+      NGROK_AUTH: ${NGROK_AUTH}
+    depends_on:
+      - nginx
+      
   # Nginx Service
   nginx:
     build: ./.docker/nginx
